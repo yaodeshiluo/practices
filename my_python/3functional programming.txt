@@ -1,0 +1,318 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#函数就是面向过程的程序设计的基本单元。
+#abs函数实际上是定义在__builtin__模块.如果__builtin__.abs=10
+
+
+f=abs
+f(-10) # 10
+
+#一个最简单的高阶函数：
+f=abs
+def add(x,y,f):
+    return f(x)+f(y)
+
+def add(x,y,f=abs):
+    return f(x)+f(y)
+
+#map(),接收两个参数，一个函数，一个序列(还可以是'ABCDEF'等)
+def f(x):
+    return x*x
+
+map(f,range(1,10))
+
+#以上代码，相当于。map()可以用for in 改写。
+def f(x):
+    return x*x
+
+L = []
+for i in range(1,10):
+    L.append(f(i))
+
+print L
+map(str,range(1,10))
+
+#将字符转换为数字
+def char2num(s):
+    return {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}[s]
+
+map(char2num,'13579') #结果为list
+
+#reduce()的两个参数，第一个为含两个参数的函数，第二个为一个序列。
+def add(x,y):
+    return x+y
+
+reduce(add,range(1,10,2))
+
+#把序列[1, 3, 5, 7, 9]变换成整数13579
+def char2num(s):
+    return {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}[s]
+
+def fn(x,y):
+    return 10*x+y
+
+reduce(fn,map(char2num,'13579'))
+
+#以上可以整理一个高阶函数：
+def str2int(s):
+    def char2num(t):
+        return {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}[t]
+    def fn(x,y):
+        return 10*x+y
+    return reduce(fn,map(char2num,s)) #在这个大函数里的小函数的参数用什么
+                                      #字母表示不重要，重要的是函数表达的逻辑。亲测char2num(s)与char2num(t)结果是一样的。
+#大函数可以写成几个小函数，小函数可以整理成大函数。
+#可以用lambda函数简写
+def str2int(s):
+    def char2num(t):
+        return {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}[t]
+    return reduce(lambda x,y:10*x+y,map(char2num,s)) #注意这里两个括号！只能在lambda表达式中封装有限的逻辑
+
+#用户输入的不规范的英文名字，变为首字母大写：s.lower(),s.upper(),s.replace()等
+def change(s):
+    def all_lower(x):
+        return x.lower() #lower后面别少了括号！！！ 类里有函数，模块里也有函数
+    def first_upper(y):
+        return y.replace(y[0],y[0].upper()) #不能是y[0].upper
+    return map(first_upper,map(all_lower,s)) #map() reduce() 的第一个参数是函数名，无括号。
+
+s=['adam', 'LISA', 'barT']
+change(s)
+
+#sum()可以接受一个list求和，注意是list！求积：
+L = range(1,10)
+prod=1
+for i in L:
+    prod=prod*i
+
+print prod
+
+#改为函数
+def prod(l):
+    p=1
+    for i in l:
+        p=p*i
+    return p 
+
+#或者借助reduce()
+def prod(L):
+    return reduce(lambda x,y:x*y, L)
+
+#filter()函数，根据True或者False返回值。第一个参数为返回bool值的函数，第二个参数为list。
+def is_odd(n):
+    return n%2==1 #return后面有接函数的，函数名的（返回函数），接公式的，接某个值的……
+
+filter(is_odd, range(1,11)) #1%2==1的值为True！-1%2==1的值也为True
+
+#过滤空白
+def not_empty(s):
+    return s and s.strip() #s.strip() #空白符（包括'\n', '\r',  '\t',  ' ')
+
+filter(not_empty, ['A', '', 'B', None, 'C', '  ', '\n', r'\n']) #注意最后两项
+#上面的结果为['A', 'B', 'C', '\\n']
+
+#sorted()函数，对比L.sort()
+L = [36, 5, 12, 9, 21]
+sorted(L) #第一个参数为list，第二个参数可以用比较函数来实现自定义的排序。
+def reverse_cmp(x,y):
+    if x<y:
+        return 1 
+    if x>y:
+        return -1 
+    return 0
+
+sorted(L,reverse_cmp)
+
+#字符串比较大小
+S=['bob', 'about', 'Zoo', 'Credit']
+sorted(['bob', 'about', 'Zoo', 'Credit']) # ['Credit', 'Zoo', 'about', 'bob']
+
+def cmp_ignore_case(s1,s2):
+    x=s1.lower()
+    y=s2.lower()
+    if x<y:
+        return -1
+    if x>y:
+        return 1 
+    return 0
+
+sorted(S, cmp_ignore_case)
+
+#返回函数，return后接函数名。
+n=10
+ax=15
+def lazy_sum(*args):
+    def sum(): #内部函数可以引用外部函数的参数和局部变量(args)
+        ax = 0
+        for n in args:
+            ax = ax + n
+        return ax
+    return sum
+
+args=[1,2,3]
+lazy_sum(*args)
+lazy_sum(*args)() #6
+
+#返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+fs=[]
+for i in range(1, 4): #指的是依次赋值，等循环结束，i则为3.
+    def f():
+        return i*i
+    fs.append(f)
+
+f1,f2,f3=fs # f1(),f2(),f3()均为9.
+
+
+#返回函数，可以先构造一个内部函数，引用外部函数的参数和局部变量。
+fs = []
+for i in range(1, 4):
+    def f(j):
+        def g(): #f1指向f(1),指向g,故f1()的括号内不能有参数。
+            return j*j
+        return g
+    fs.append(f(i)) #这一行上面不能有空行，否则会被认为for in 语句中断。是否可认为代码块内部不得有空行？？if语，def语句，while语句等等。
+
+f1,f2,f3=fs
+f(1)
+f(1)() #在这里f(1)指向一个函数，可以理解成指向一个函数名。
+
+#for in 语句是个赋值过程，结束后，有个最终值:
+for x in range(1,10):
+    pass
+
+x # 9
+
+#匿名函数lambda,只能有一个表达式!!!!!
+map(lambda x:x*x, range(1,10))
+
+f=lambda x:x*x #lambda指向一个函数名。
+f(5) # 25
+
+#把匿名函数作为返回值返回
+def build(x,y):
+    return lambda a,b:x*x+y*y 
+
+def build(x,y):
+    return lambda :x*x+y*y
+
+def build(x,y):
+    return lambda x,y:x*x+y*y # build(5,4)(1,2)为5.
+
+build(5,4)()
+build(5,4)(1,2)
+
+#装饰器Decorator，可以不严谨地把Python的装饰器看做一个包装函数的函数
+#装饰器Decorator,参数是原函数，返回的是一个wrapper函数，替代被装饰的函数。
+def log(func):
+    def wrapper(*args,**kw): # 上行可加@functools.wraps(func)，最外围的上面加import functools
+        print 'call %s' %func.__name__ #内部函数可以接受外部局部变量和参数。
+        return func(*args,**kw) #不要写成func()
+    return wrapper 
+
+#加了@functools.wraps(func)后，now.__name__为'now'，不加则为'wrapper'
+def now():
+    print '2013-12-25'
+
+@log
+def now():
+    print '2013-12-25'
+
+now.__name__ #wrapper ,now = log (now) ，这里=为赋值，旧now被新now替代了。
+
+
+def log(text):
+    def decorator(func):
+        def wrapper(*args,**kw): # 上行可加@functools.wraps(func)，最外围的上面加import functools
+            print '%s %s' %(text,func.__name__)
+            return func(*args,**kw) #不要就写成func()
+        return wrapper 
+    return decorator
+
+
+@log('execute')
+def now():
+    print '2013-12-25' # 这里now = log('execute')(now).旧now函数被新的wrapper函数替代。
+
+#在函数前后都装饰的装饰器。
+#错误事例：
+def log(func):
+    def wrapper(*args,**kw): # 上行可加@functools.wraps(func)，最外围的上面加import functools
+        print 'call %s' %func.__name__ #内部函数可以接受外部局部变量和参数。
+        return func(*args,**kw) # def wrapper函数执行到return即会返回，下一行命令不会执行。
+        print 'end call' #错误！！！！！这一行不会执行。
+    return wrapper 
+
+#改正后：
+def decorator(func):
+    def wrapper(*args,**kw):
+        print 'call %s' % func.__name__
+        rst = func(*args,**kw)  #这一行不太理解？？？？？？？这里用print会多出None！
+        print 'end call'
+        return rst
+    return wrapper
+
+@decorator
+def now():
+    print '2013-11-25'
+
+#内置函数一般在__builtin__模块。
+int('8',base=8) #报错，因为八进制里没有字符8.
+
+#偏函数,functools.partial可以创建一个新的函数(原函数名，参数=赋值)
+import functools
+int2= functools.partial(int,base=2)
+#相当于：
+kw={'base':2} #是'base'，不是base,不然会报错，说未定义。
+int('10011',**kw) #**kw后就相当于base=2
+int('10011',base=2) 
+
+import functools
+args = (10, 5, 6, 7)
+max(*args)
+
+max2=functools.partial(max,20)
+max2(*args)
+
+#对比sorted()
+sorted2=functools.partial(sorted,50)
+sorted(*args) #报错，sorted()的参数为list或者tuple
+
+def decorator(func):
+    def wrapper(*args,**kw):
+        print 'call %s' % func.__name__
+        rst = func(*args,**kw)  #这一行不太理解？？？？？？？这里用print会出现None？？？
+        print 'end call'
+    return wrapper
+
+@decorator
+def now():
+    print '2013-11-25'
+
+#？？？？
+def now():
+    print '2013-12-25'
+
+print now() 
+#2013-12-25 
+#None
+
+def log(func):
+    def wrapper(*args,**kw): 
+        print 'call %s' %func.__name__ 
+        wrapper.__name__ = func.__name__ #直接加了这一行，now.__name__还是'wrapper'!!!!这一行没有执行过？
+        return func()
+    return wrapper 
+
+#加了@functools.wraps(func)后，now.__name__为'now'，不加则为'wrapper'
+def now():
+    print '2013-12-25'
+
+@log
+def now():
+    print '2013-12-25'
+
+now.__name__
+
+
+

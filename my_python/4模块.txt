@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#在Python中，一个.py文件就称之为一个模块（Module）
+#每一个包目录下面都会有一个__init__.py的文件  表示这是包，不是普通目录
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'Michael Liao'
+
+import sys #模块可以导入内置模块。
+
+def test(): # hello.test()中的test()为模块里定义的函数
+    args = sys.argv #模块里的类，还是属性？sys.argv为一个list
+    if len(args)==1: #len()里面可以是list！！不止str！
+        print 'Hello, world!'
+    elif len(args)==2:
+        print 'Hello, %s!' % args[1]
+    else:
+        print 'Too many arguments!'
+
+if __name__=='__main__':  #命令行下运行才会发生
+    test() # 直接运行某个函数的if语句
+
+
+#导入上述模块
+import hello  #不是hello.py
+
+#类似__xxx__这样的变量是特殊变量，可以被直接引用
+liao_hello.__name__ # 'liao_hello'
+liao_hell0.__author__ # 'Michael Liao'
+liao_hello.__doc__ # ' a test module '
+
+#类似_xxx和__xxx这样的函数或变量就是非公开的（private）
+def _private_1(name):
+    return 'Hello, %s' % name
+
+def _private_2(name):
+    return 'Hi, %s' % name
+
+def greeting(name):
+    if len(name) > 3:
+        return _private_1(name) #这里把return去掉，则运行了，但不显示。
+    else:
+        return _private_2(name) #这里把return去掉，则运行了，但不显示。
+
+
+#别名
+try:
+    import cStringIO as StringIO
+except ImportError: # 导入失败会捕获到ImportError
+    import StringIO
+
+try:
+    import json # python >= 2.6
+except ImportError:
+    import simplejson as json # python <= 2.5
+
+#模块搜索路径
+import sys
+sys.path # list
+sys.path.append('')
+
+#使用__future__
+#__future__模块里有定义？？？division，unicode_literals等。可见模块里不仅有函数，有属性。
+
+

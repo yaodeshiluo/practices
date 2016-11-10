@@ -1,0 +1,215 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+#CPython CPython是使用最广的Python解释器。教程的所有代码也都在CPython下执行
+exit()
+
+print 'The quick brown fox', 'jumps over', 'the lazy dog'#The quick brown fox jumps over the lazy dog
+print 'The quick brown fox','jumps over','the lazy dog'#The quick brown fox jumps over the lazy dog
+
+print 100 + 200
+print '100 + 200 =', 100 + 200
+
+name = raw_input()#并按下回车后，Python交互式命令行就在等待你的输入了
+
+name
+'Michael'
+
+print name
+Michael
+
+#raw_input和print是在命令行下面最基本的输入和输出
+#以下两行以.py保存后在命令行下运行才正常
+name = raw_input('please enter your name:')
+print 'hello,', name 
+
+
+#十六进制用0x前缀和0-9，a-f表示，例如：0xff00
+
+1.23e8 #123000000.0
+1.2e-5 #1.2e-05
+1.3e-3 #0.0013
+
+
+"I'm OK"
+'I\'m \"OK\"' #  'I\'m "OK"!'？？？？？
+
+'\''
+print '\''
+
+print '\\\n\\'
+'\\\n\\' #两者结果不同
+
+print 'I\'m learning\nPython.'
+'I\'m learning\nPython.'
+
+'\\\t\\'
+print '\\\t\\'
+print r'\\\t\\'
+
+
+print '''line1
+line2
+line3
+
+''' #注意空格的显示结果，还可以在前面加上r使用
+
+not True
+True and False #false
+True or False #True
+
+
+age = 18 #如果没有这一行，会报错说age未定义
+if age>=18:
+    print 'adult'
+else:
+    print 'teenager'
+
+
+#变量名必须是大小写英文、数字和_的组合，且不能用数字开头。可以把任意数据类型赋值给变量。
+
+x=10
+x=x+2
+
+#可变对象与不可变对象
+a = 'ABC'
+b = a
+a = 'XYZ'
+print b #b为’ABC'
+
+a=[1,2,3]
+b=a
+c=a.pop() #3,a为[1,2],b为[1,2]
+
+10/3
+10.0/3
+10%3
+
+ord('A')
+chr(65)
+
+'Hello, %s' %'world'
+'Hi, %s, you have $%d.' %('Michael', 1000000)#%d,整数;%f,浮点数;%s,字符串;%x,十六进制整数
+
+'Age: %s. Gender: %s' % (25, True)#%s会把任何数据类型时为字符串
+'%.2f' % 3.1415926
+'%2d-%02d' % (3, 1)
+
+'%'
+'%%'
+print '%%'
+'growth rate: %d %%' % 7
+'growth rate: %d %' % 7 #这里错
+
+list = ['Michael', 'Bob', 'Tracy']#list元素也可以是另一个list
+len(list)
+list[0]
+list.append()
+list.insert(1,'Jack')
+list.pop()#删除末尾的元素
+list[1]='Sarah'#替代
+L = []
+len(L) #=0
+
+tuple=(1,)
+tuple=()
+t=('a', 'b', ['A', 'B'])
+t[2][0]
+t[2][0]='X'#赋值
+
+#如果if语句判断是True，就把缩进的两行print语句执行了，否则，什么也不做。
+if x:
+    print 'True'#只要x是非零数值、非空字符串、非空list等，就判断为True
+
+sum = 0
+for n in [1,2,3,4,5,6,7,8,9]:#注意:
+    sum = sum + n
+
+print sum #上一行得有空格，不然报错。可类似累计乘法。
+
+sum = 0
+for x in range(101):
+    sum = sum + x
+
+print sum#100以内所有正整数的总和
+
+sum=0
+n=99
+while n>0:
+    sum=sum+n
+    n=n-2
+
+print sum #100以内所有奇数的总和
+
+#从raw_input()读取的内容永远以字符串的形式返回,'1982' < 2000的值为False。
+birth = int(raw_input('birth: ')) #以.py形式在命令行下运行会出错，下面的则不会。
+if birth<2000:
+    print '00前'
+else:
+    print '00后'
+
+birth = raw_input('birth: ')
+if int(birth) < 2000:
+    print '00前'
+else:
+    print '00后'  
+
+
+sum=0
+x=1
+while x>0:
+    sum=sum+x
+    x=x+1
+
+print sum #为死循环，按ctrl+c退出
+
+#dict和set
+d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
+d['Michael']
+d['Adam']= 67 #能通过key值放入数据，可以通过in判断key是否存在
+d.get('Adam') #67
+d.get('Adam',None)
+d.get('Tom',None)#与d.get('Tom')结果一样，默认返回None
+d.get('Tom', -1)
+
+key = [1, 2, 3]
+d[key] = 'a list' #unhashable type,无法放入数据。作为key的对象不能变。
+d[2]= 89 #字符串、整数等都是不可变的，因此，可以放心地作为key
+
+#set
+s = set([1, 1, 2, 2, 3, 3]) #重复元素在set中自动被过滤
+s.add(4)
+s.remove(1)
+s.add([1,3]) #会报错，因为不能放入可变对象
+
+
+x =[4, 6, 2, 1, 7, 9]
+y = x[:]
+y.pop()
+y
+x #最后x和y不一样
+
+x =[4, 6, 2, 1, 7, 9]
+y = x
+y.pop()
+y
+x #最后x和y还是一样
+
+#不可变对象
+#list可变，可以用list.sort()命令，对比L=sorted（list）
+list= ['c', 'b', 'a']
+list.sort() 
+
+#注意以下，不可变对象
+a = 'abc'
+b = a.replace('a', 'A')
+b # 'Abc'
+a # 'abc'，没变！！！！！！不会改变不可变对象自身的内容。相反，这些方法会创建新的对象并返回
+
+a = 'abc'
+b=a
+c = a.replace('a', 'A')
+c # 'Abc'
+a # 'abc'，没变！！！！！！不会改变不可变对象自身的内容。相反，这些方法会创建新的对象并返回
+b # 'abc'，没变！！！！！！不会改变不可变对象自身的内容。相反，这些方法会创建新的对象并返回
